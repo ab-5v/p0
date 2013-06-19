@@ -1,0 +1,26 @@
+{
+  "name": "p0",
+  "version": "0.0.0",
+  "description": "Minimal Promise/A+ implementation.",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/promises-aplus-tests test/adapter.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/artjock/p0.git"
+  },
+  "keywords": [
+    "defer",
+    "deferred",
+    "promise",
+    "promise/A+",
+    "A+",
+    "aplus"
+  ],
+  "author": "Artur Burtsev <artjock@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "promises-aplus-tests": "~1.3.1"
+  }
+}
