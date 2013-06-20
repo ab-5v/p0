@@ -1,9 +1,9 @@
 ;(function(root, undef) {
 
 var FUNC = 'function';
-    PENDING = 0;
-    REJECTED = 1;
-    FULFILLED = 2;
+var PENDING = 0;
+var REJECTED = 1;
+var FULFILLED = 2;
 
 function pzero() {
     this._state = PENDING;
@@ -26,21 +26,22 @@ pzero.prototype = {
         var val = this._value;
 
         pzero.nextTick(function() {
-            var inf, res;
+            var inf, res, pr;
 
             while (inf = cbs.shift()) {
+                pr = inf.pr;
 
                 try {
                     res = inf.cb(val);
                 } catch(e) {
-                    inf.pr.reject(e);
+                    pr.reject(e);
                     continue;
                 }
 
                 if (pzero.is(res)) {
-                    inf.pr.pipe(res);
+                    res.then(pr.fulfill.bind(pr), pr.reject.bind(pr));
                 } else {
-                    inf.pr.fulfill(res);
+                    pr.fulfill(res);
                 }
             }
         });
@@ -63,15 +64,11 @@ pzero.prototype = {
         }
     },
 
-    pipe: function(pr) {
-        pr.then(this.fulfill.bind(this), this.reject.bind(this));
-    },
-
     then: function(onFulfilled, onRejected) {
 
         var pr = new pzero();
-        var cb = typeof onFulfilled === FUNC ? onFulfilled : function(value) { pr.fulfill(value); };
-        var eb = typeof onRejected === FUNC ? onRejected : function(reason) { pr.reject(reason); };
+        var cb = typeof onFulfilled === FUNC ? onFulfilled : pr.fulfill.bind(pr);
+        var eb = typeof onRejected === FUNC ? onRejected : pr.reject.bind(pr);
 
         switch (this._state) {
 
