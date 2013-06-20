@@ -17,7 +17,7 @@ pzero.is = function(x) {
 };
 
 pzero.nextTick = function(cb) {
-    setTimeout(cb, 0);
+    process.nextTick(cb, 0);
 };
 
 pzero.prototype = {
