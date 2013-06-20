@@ -31,7 +31,7 @@ var promise2 = promise1.then(
 promise1.reject('foo');
 
 promise2.then(function(value) { console.log(value); });
-// will output foobar after 100ms
+// will output "foobar" after 100ms
 ```
 
 Fill free to use [specs](http://promisesaplus.com/) as more descriptive documentation.
