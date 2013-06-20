@@ -91,6 +91,6 @@ p0.prototype = {
 
 };
 
-module.exports = p0;
+module && module.exports ? module.exports = p0 : root.p0 = p0;
 
 })(this);
