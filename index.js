@@ -70,27 +70,23 @@ pzero.prototype = {
     then: function(onFulfilled, onRejected) {
 
         var pr = new pzero();
-        var cb = typeof onFulfilled === FUNC && onFulfilled;
-        var eb = typeof onRejected === FUNC && onRejected;
+        var cb = typeof onFulfilled === FUNC ? onFulfilled : function(value) { pr.fulfill(value); };
+        var eb = typeof onRejected === FUNC ? onRejected : function(reason) { pr.reject(reason); };
 
-        if (!cb && !eb) {
-            pr.pipe(this);
-        } else {
-            switch (this._state) {
+        switch (this._state) {
 
-                case PENDING:
-                    cb && this._cbs.push({cb: cb, pr: pr});
-                    eb && this._ebs.push({cb: eb, pr: pr});
-                break;
+            case PENDING:
+                this._cbs.push({cb: cb, pr: pr});
+                this._ebs.push({cb: eb, pr: pr});
+            break;
 
-                case REJECTED:
-                    eb && this._exec([ {cb: eb, pr: pr} ]);
-                break;
+            case REJECTED:
+                this._exec([ {cb: eb, pr: pr} ]);
+            break;
 
-                case FULFILLED:
-                    cb && this._exec([ {cb: cb, pr: pr} ]);
-                break;
-            }
+            case FULFILLED:
+                this._exec([ {cb: cb, pr: pr} ]);
+            break;
         }
 
         return pr;
