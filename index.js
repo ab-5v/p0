@@ -5,27 +5,27 @@ var PENDING = 0;
 var REJECTED = 1;
 var FULFILLED = 2;
 
-function pzero() {
+function p0() {
     this._state = PENDING;
     this._value = undef;
     this._cbs = [];
     this._ebs = [];
 }
 
-pzero.is = function(x) {
+p0.is = function(x) {
     return x && typeof x.then === FUNC;
 };
 
-pzero.nextTick = function(cb) {
+p0.nextTick = function(cb) {
     process.nextTick(cb, 0);
 };
 
-pzero.prototype = {
+p0.prototype = {
 
     _exec: function(cbs) {
         var val = this._value;
 
-        pzero.nextTick(function() {
+        p0.nextTick(function() {
             var inf, res, pr;
 
             while (inf = cbs.shift()) {
@@ -38,7 +38,7 @@ pzero.prototype = {
                     continue;
                 }
 
-                if (pzero.is(res)) {
+                if (p0.is(res)) {
                     res.then(pr.fulfill.bind(pr), pr.reject.bind(pr));
                 } else {
                     pr.fulfill(res);
@@ -66,7 +66,7 @@ pzero.prototype = {
 
     then: function(onFulfilled, onRejected) {
 
-        var pr = new pzero();
+        var pr = new p0();
         var cb = typeof onFulfilled === FUNC ? onFulfilled : pr.fulfill.bind(pr);
         var eb = typeof onRejected === FUNC ? onRejected : pr.reject.bind(pr);
 
@@ -91,6 +91,6 @@ pzero.prototype = {
 
 };
 
-module.exports = pzero;
+module.exports = p0;
 
 })(this);
