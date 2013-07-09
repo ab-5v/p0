@@ -91,6 +91,10 @@ p0.prototype = {
 
 };
 
-module && module.exports ? module.exports = p0 : root.p0 = p0;
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = p0;
+} else {
+    root.p0 = p0;
+}
 
 })(this);

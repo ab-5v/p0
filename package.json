@@ -1,6 +1,6 @@
 {
   "name": "p0",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Minimal Promise/A+ implementation.",
   "main": "index.js",
   "scripts": {
