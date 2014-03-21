@@ -17,7 +17,7 @@ p0.is = function(x) {
 };
 
 p0.nextTick = function(cb) {
-    process.nextTick(cb, 0);
+    setTimeout(cb, 0);
 };
 
 p0.prototype = {
