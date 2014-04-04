@@ -39,7 +39,7 @@ p0.prototype = {
                 }
 
                 if (p0.is(res)) {
-                    res.then(pr.fulfill.bind(pr), pr.reject.bind(pr));
+                    res.then(bind(pr, 'fulfill'), bind(pr, 'reject'));
                 } else {
                     pr.fulfill(res);
                 }
@@ -67,8 +67,8 @@ p0.prototype = {
     then: function(onFulfilled, onRejected) {
 
         var pr = new p0();
-        var cb = typeof onFulfilled === FUNC ? onFulfilled : pr.fulfill.bind(pr);
-        var eb = typeof onRejected === FUNC ? onRejected : pr.reject.bind(pr);
+        var cb = typeof onFulfilled === FUNC ? onFulfilled : bind(pr, 'fulfill');
+        var eb = typeof onRejected === FUNC ? onRejected : bind(pr, 'reject');
 
         switch (this._state) {
 
@@ -95,6 +95,12 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = p0;
 } else {
     root.p0 = p0;
+}
+
+function bind(obj, method) {
+    return function() {
+        return obj[method].apply(obj, arguments);
+    };
 }
 
 })(this);
