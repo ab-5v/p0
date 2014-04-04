@@ -97,10 +97,6 @@ if (typeof module !== 'undefined' && module.exports) {
     root.p0 = p0;
 }
 
-function bind(obj, method) {
-    return function() {
-        return obj[method].apply(obj, arguments);
-    };
-}
+function bind(obj, meth) { return function(val) { return obj[meth](val); }; }
 
 })(this);
