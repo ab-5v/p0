@@ -26,23 +26,20 @@ p0.prototype = {
         var val = this._value;
 
         p0.nextTick(function() {
-            var inf, res, pr;
+            var inf, res, pr, cb, then;
 
             while (inf = cbs.shift()) {
                 pr = inf.pr;
+                cb = inf.cb;
 
                 try {
-                    res = inf.cb(val);
+                    res = cb(val);
                 } catch(e) {
                     pr.reject(e);
                     continue;
                 }
 
-                if (p0.is(res)) {
-                    res.then(bind(pr, 'fulfill'), bind(pr, 'reject'));
-                } else {
-                    pr.fulfill(res);
-                }
+                pr.fulfill(res);
             }
         });
 
@@ -57,10 +54,40 @@ p0.prototype = {
     },
 
     fulfill: function(value) {
+        var resolved, then, tof, that = this;
+
         if (this._state === PENDING) {
-            this._value = value;
-            this._state = FULFILLED;
-            this._exec(this._cbs);
+
+            try {
+                if (value === this) { throw TypeError(); }
+                tof = typeof value;
+                then = (tof === FUNC || tof === 'object' && value !== null) && value.then;
+            } catch (e) {
+                this.reject(e);
+                return;
+            }
+
+            if (typeof then === FUNC) {
+                try {
+                    then.call(value, function(value) {
+                        if (!resolved) {
+                            resolved = 1;
+                            that.fulfill(value);
+                        }
+                    }, function(reason) {
+                        if (!resolved) {
+                            resolved = 1;
+                            that.reject(reason);
+                        }
+                    });
+                } catch(e) {
+                    resolved || this.reject(e);
+                }
+            } else {
+                this._value = value;
+                this._state = FULFILLED;
+                this._exec(this._cbs);
+            }
         }
     },
 

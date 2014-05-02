@@ -1,22 +1,12 @@
-var pzero = require('../index.js');
+var p0 = require('../index.js');
 
 module.exports = {
-    fulfilled: function(value) {
-        var promise = new pzero();
-        promise.fulfill(value);
-        return promise;
-    },
-    rejected: function(reason) {
-        var promise = new pzero();
-        promise.reject(reason);
-        return promise;
-    },
-    pending: function() {
-        var promise = new pzero();
+    deferred: function() {
+        var promise = new p0();
 
         return {
             promise: promise,
-            fulfill: function(value) {
+            resolve: function(value) {
                 promise.fulfill(value);
             },
             reject: function(reason) {
