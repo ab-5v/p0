@@ -12,10 +12,6 @@ function p0() {
     this._ebs = [];
 }
 
-p0.is = function(x) {
-    return x && typeof x.then === FUNC;
-};
-
 p0.nextTick = function(cb) {
     setTimeout(cb, 0);
 };
@@ -26,7 +22,7 @@ p0.prototype = {
         var val = this._value;
 
         p0.nextTick(function() {
-            var inf, res, pr, cb, then;
+            var inf, res, pr, cb;
 
             while (inf = cbs.shift()) {
                 pr = inf.pr;
@@ -60,8 +56,8 @@ p0.prototype = {
 
             try {
                 if (value === this) { throw TypeError(); }
-                tof = typeof value;
-                then = (tof === FUNC || tof === 'object' && value !== null) && value.then;
+                tof = value && typeof value;
+                then = (tof === FUNC || tof === 'object') && value.then;
             } catch (e) {
                 this.reject(e);
                 return;
@@ -81,7 +77,7 @@ p0.prototype = {
                         }
                     });
                 } catch(e) {
-                    resolved || this.reject(e);
+                    if (!resolved) { this.reject(e); }
                 }
             } else {
                 this._value = value;
