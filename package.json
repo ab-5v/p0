@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/promises-aplus-tests test/adapter.js --bail",
-    "watch": "./node_modules/.bin/nodemon --exec npm test"
+    "watch": "./node_modules/.bin/nodemon --exec npm test",
+    "build": "./node_modules/.bin/uglifyjs index.js -mto index.min.js"
   },
   "repository": {
     "type": "git",
@@ -22,7 +23,8 @@
   "author": "Artur Burtsev <artjock@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "nodemon": "*",
     "promises-aplus-tests": "2.0.4",
-    "nodemon": "*"
+    "uglify-js": "2.4.13"
   }
 }
