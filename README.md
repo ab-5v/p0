@@ -2,12 +2,18 @@
 p0 [![build status](https://secure.travis-ci.org/artjock/pzero.png)](http://travis-ci.org/artjock/p0)
 ==
 
-Minimal and fast Promise/A+ implementation. It's all you need to pass the [tests](https://github.com/promises-aplus/promises-tests) and build your own extended API.
+Minimal and fast Promise/A+ 1.1 implementation. It's all you need to pass the [tests](https://github.com/promises-aplus/promises-tests) and build your own [extended API](https://github.com/artjock/pzero).
 
 ### Installation
 
+#### Node.js
 ```
 npm install p0
+```
+
+#### Browser
+```
+<script src="p0/index.min.js"></script>
 ```
 
 ### Usage
