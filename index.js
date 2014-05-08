@@ -53,14 +53,14 @@ p0.prototype = {
     fulfill: function(value) {
         var then, tof, that = this, pending = 1;
 
-        if (this._act === PENDING) {
+        if (that._act === PENDING) {
 
             try {
-                if (value === this) { throw TypeError(); }
+                if (value === that) { throw TypeError(); }
                 tof = value && typeof value;
                 then = (tof === FUNC || tof === 'object') && value.then;
             } catch (e) {
-                this.reject(e);
+                that.reject(e);
                 return;
             }
 
@@ -71,25 +71,25 @@ p0.prototype = {
                         function(r) { pending = pending && that.reject(r); }
                     );
                 } catch(e) {
-                    if (pending) { this.reject(e); }
+                    if (pending) { that.reject(e); }
                 }
             } else {
-                this._val = value;
-                this._act = FULFILL;
-                this._exec(this._cbs);
+                that._val = value;
+                that._act = FULFILL;
+                that._exec(that._cbs);
             }
         }
     },
 
     then: function(cb, eb) {
 
-        var pr = new p0();
+        var pr = new p0(), that = this;
 
-        if (this._act === PENDING) {
-            this._cbs.push({cb: cb, pr: pr});
-            this._ebs.push({cb: eb, pr: pr});
+        if (that._act === PENDING) {
+            that._cbs.push({cb: cb, pr: pr});
+            that._ebs.push({cb: eb, pr: pr});
         } else {
-            this._exec([ {cb: this._act == REJECT ? eb : cb, pr: pr} ]);
+            that._exec([ {cb: that._act == REJECT ? eb : cb, pr: pr} ]);
         }
 
         return pr;
