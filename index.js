@@ -42,6 +42,7 @@ p0.prototype = {
 
     reject: function(reason) {
         var that = this;
+
         if (that._act === PENDING) {
             that._val = reason;
             that._act = REJECT;
@@ -62,7 +63,6 @@ p0.prototype = {
                 that.reject(e);
                 return;
             }
-
             if (isFunction(then)) {
                 try {
                     then.call(value,
@@ -100,6 +100,6 @@ if (typeof module != 'undefined' && module.exports) {
     root.p0 = p0;
 }
 
-function isFunction(val) { return typeof val === FUNC && val; }
+function isFunction(val) { return typeof val == FUNC && val; }
 
 })(this);
