@@ -71,7 +71,7 @@ p0.prototype = {
                         function(r) { pending = pending && that.reject(r); }
                     );
                 } catch(e) {
-                    if (pending) { that.reject(e); }
+                    pending = pending && that.reject(e);
                 }
             } else {
                 that._val = value;
