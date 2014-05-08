@@ -12,7 +12,7 @@ function p0() {
     this._ebs = [];
 }
 
-p0.nextTick = function(cb) {
+p0.tick = function(cb) {
     setTimeout(cb, 0);
 };
 
@@ -21,7 +21,7 @@ p0.prototype = {
     _exec: function(cbs) {
         var val = this._val, act = this._act;
 
-        p0.nextTick(function() {
+        p0.tick(function() {
             var inf, pr, cb;
 
             while (inf = cbs.shift()) {
