@@ -29,14 +29,15 @@ p0.prototype = {
                 pr = inf.pr;
                 cb = isFunction(inf.cb);
 
-                try {
-                    res = cb ? cb(val) : val;
-                } catch(e) {
-                    pr.reject(e);
-                    continue;
+                if (cb) {
+                    try {
+                        pr.fulfill(cb(val));
+                    } catch(e) {
+                        pr.reject(e)
+                    }
+                } else {
+                    pr[act](val);
                 }
-
-                pr[cb ? FULFILL : act](res);
             }
         });
 
