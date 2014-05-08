@@ -1,4 +1,4 @@
-;(function(root, undef) {
+;(function(root) {
 
 var FUNC = 'function';
 var REJECT = 'reject';
@@ -6,8 +6,8 @@ var FULFILL = 'fulfill';
 var PENDING = 0;
 
 function p0() {
+//  this._val = undefined;
     this._act = PENDING;
-    this._val = undef;
     this._cbs = [];
     this._ebs = [];
 }
