@@ -1,9 +1,12 @@
 ;(function(root) {
+'use strict';
 
 var FUNC = 'function',
+    OBJECT = 'object',
     REJECT = 'reject',
     FULFILL = 'fulfill',
-    PENDING = 0;
+    PENDING = 0,
+    isNode = typeof module == OBJECT && module.exports;
 
 function p0() {
 //  this._val = undefined;
@@ -12,7 +15,7 @@ function p0() {
     this._ebs = [];
 }
 
-p0.tick = setTimeout;
+p0.tick = isNode ? process.nextTick : setTimeout;
 
 p0.prototype = {
 
@@ -30,7 +33,7 @@ p0.prototype = {
                     try {
                         pr.fulfill(cb(val));
                     } catch(e) {
-                        pr.reject(e)
+                        pr.reject(e);
                     }
                 } else {
                     pr[act](val);
@@ -58,7 +61,7 @@ p0.prototype = {
             try {
                 if (value === that) { throw TypeError(); }
                 tof = value && typeof value;
-                then = (tof === FUNC || tof === 'object') && value.then;
+                then = (tof === FUNC || tof === OBJECT) && value.then;
             } catch (e) {
                 that.reject(e);
                 return;
@@ -94,11 +97,7 @@ p0.prototype = {
 
 };
 
-if (typeof module != 'undefined' && module.exports) {
-    module.exports = p0;
-} else {
-    root.p0 = p0;
-}
+if (isNode) { module.exports = p0; } else { (root || window).p0 = p0; };
 
 function isFunction(val) { return typeof val == FUNC && val; }
 
