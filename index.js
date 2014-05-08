@@ -19,11 +19,10 @@ p0.nextTick = function(cb) {
 p0.prototype = {
 
     _exec: function(cbs) {
-        var val = this._val;
-        var act = this._act;
+        var val = this._val, act = this._act;
 
         p0.nextTick(function() {
-            var inf, res, pr, cb;
+            var inf, pr, cb;
 
             while (inf = cbs.shift()) {
                 pr = inf.pr;
@@ -84,7 +83,7 @@ p0.prototype = {
 
     then: function(cb, eb) {
 
-        var pr = new p0(), that = this;
+        var that = this, pr = new p0();
 
         if (that._act === PENDING) {
             that._cbs.push({cb: cb, pr: pr});
