@@ -1,13 +1,13 @@
 ;(function(root, undef) {
 
 var FUNC = 'function';
+var REJECT = 'reject';
+var FULFILL = 'fulfill';
 var PENDING = 0;
-var REJECTED = 1;
-var FULFILLED = 2;
 
 function p0() {
-    this._state = PENDING;
-    this._value = undef;
+    this._act = PENDING;
+    this._val = undef;
     this._cbs = [];
     this._ebs = [];
 }
@@ -19,8 +19,8 @@ p0.nextTick = function(cb) {
 p0.prototype = {
 
     _exec: function(cbs) {
-        var val = this._value;
-        var act = this._state === REJECTED ? 'reject' : 'fulfill';
+        var val = this._val;
+        var act = this._act;
 
         p0.nextTick(function() {
             var inf, res, pr, cb;
@@ -36,16 +36,16 @@ p0.prototype = {
                     continue;
                 }
 
-                pr[cb ? 'fulfill' : act ](res);
+                pr[cb ? FULFILL : act](res);
             }
         });
 
     },
 
     reject: function(reason) {
-        if (this._state === PENDING) {
-            this._value = reason;
-            this._state = REJECTED;
+        if (this._act === PENDING) {
+            this._val = reason;
+            this._act = REJECT;
             this._exec(this._ebs);
         }
     },
@@ -53,7 +53,7 @@ p0.prototype = {
     fulfill: function(value) {
         var then, tof, that = this, pending = 1;
 
-        if (this._state === PENDING) {
+        if (this._act === PENDING) {
 
             try {
                 if (value === this) { throw TypeError(); }
@@ -74,8 +74,8 @@ p0.prototype = {
                     if (pending) { this.reject(e); }
                 }
             } else {
-                this._value = value;
-                this._state = FULFILLED;
+                this._val = value;
+                this._act = FULFILL;
                 this._exec(this._cbs);
             }
         }
@@ -85,20 +85,11 @@ p0.prototype = {
 
         var pr = new p0();
 
-        switch (this._state) {
-
-            case PENDING:
-                this._cbs.push({cb: cb, pr: pr});
-                this._ebs.push({cb: eb, pr: pr});
-            break;
-
-            case REJECTED:
-                this._exec([ {cb: eb, pr: pr} ]);
-            break;
-
-            case FULFILLED:
-                this._exec([ {cb: cb, pr: pr} ]);
-            break;
+        if (this._act === PENDING) {
+            this._cbs.push({cb: cb, pr: pr});
+            this._ebs.push({cb: eb, pr: pr});
+        } else {
+            this._exec([ {cb: this._act == REJECT ? eb : cb, pr: pr} ]);
         }
 
         return pr;
