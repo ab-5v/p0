@@ -43,10 +43,11 @@ p0.prototype = {
     },
 
     reject: function(reason) {
-        if (this._act === PENDING) {
-            this._val = reason;
-            this._act = REJECT;
-            this._exec(this._ebs);
+        var that = this;
+        if (that._act === PENDING) {
+            that._val = reason;
+            that._act = REJECT;
+            that._exec(that._ebs);
         }
     },
 
