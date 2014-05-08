@@ -1,9 +1,9 @@
 ;(function(root) {
 
-var FUNC = 'function';
-var REJECT = 'reject';
-var FULFILL = 'fulfill';
-var PENDING = 0;
+var FUNC = 'function',
+    REJECT = 'reject',
+    FULFILL = 'fulfill',
+    PENDING = 0;
 
 function p0() {
 //  this._val = undefined;
@@ -12,9 +12,7 @@ function p0() {
     this._ebs = [];
 }
 
-p0.tick = function(cb) {
-    setTimeout(cb, 0);
-};
+p0.tick = setTimeout;
 
 p0.prototype = {
 
@@ -83,7 +81,6 @@ p0.prototype = {
     },
 
     then: function(cb, eb) {
-
         var that = this, pr = new p0();
 
         if (that._act === PENDING) {
@@ -92,7 +89,6 @@ p0.prototype = {
         } else {
             that._exec([ {cb: that._act == REJECT ? eb : cb, pr: pr} ]);
         }
-
         return pr;
     }
 
