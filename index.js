@@ -20,22 +20,23 @@ p0.prototype = {
 
     _exec: function(cbs) {
         var val = this._value;
+        var act = this._state === REJECTED ? 'reject' : 'fulfill';
 
         p0.nextTick(function() {
             var inf, res, pr, cb;
 
             while (inf = cbs.shift()) {
                 pr = inf.pr;
-                cb = inf.cb;
+                cb = isFunction(inf.cb);
 
                 try {
-                    res = cb(val);
+                    res = cb ? cb(val) : val;
                 } catch(e) {
                     pr.reject(e);
                     continue;
                 }
 
-                pr.fulfill(res);
+                pr[cb ? 'fulfill' : act ](res);
             }
         });
 
@@ -50,7 +51,7 @@ p0.prototype = {
     },
 
     fulfill: function(value) {
-        var resolved, then, tof, that = this;
+        var then, tof, that = this, pending = 1;
 
         if (this._state === PENDING) {
 
@@ -63,21 +64,14 @@ p0.prototype = {
                 return;
             }
 
-            if (typeof then === FUNC) {
+            if (isFunction(then)) {
                 try {
-                    then.call(value, function(value) {
-                        if (!resolved) {
-                            resolved = 1;
-                            that.fulfill(value);
-                        }
-                    }, function(reason) {
-                        if (!resolved) {
-                            resolved = 1;
-                            that.reject(reason);
-                        }
-                    });
+                    then.call(value,
+                        function(v) { pending = pending && that.fulfill(v); },
+                        function(r) { pending = pending && that.reject(r); }
+                    );
                 } catch(e) {
-                    if (!resolved) { this.reject(e); }
+                    if (pending) { this.reject(e); }
                 }
             } else {
                 this._value = value;
@@ -87,11 +81,9 @@ p0.prototype = {
         }
     },
 
-    then: function(onFulfilled, onRejected) {
+    then: function(cb, eb) {
 
         var pr = new p0();
-        var cb = typeof onFulfilled === FUNC ? onFulfilled : bind(pr, 'fulfill');
-        var eb = typeof onRejected === FUNC ? onRejected : bind(pr, 'reject');
 
         switch (this._state) {
 
@@ -120,6 +112,6 @@ if (typeof module !== 'undefined' && module.exports) {
     root.p0 = p0;
 }
 
-function bind(obj, meth) { return function(val) { return obj[meth](val); }; }
+function isFunction(val) { return typeof val === FUNC && val; }
 
 })(this);

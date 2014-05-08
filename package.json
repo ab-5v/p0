@@ -4,7 +4,7 @@
   "description": "Minimal Promise/A+ implementation.",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/promises-aplus-tests test/adapter.js",
+    "test": "./node_modules/.bin/promises-aplus-tests test/adapter.js --bail",
     "watch": "./node_modules/.bin/nodemon --exec npm test"
   },
   "repository": {
