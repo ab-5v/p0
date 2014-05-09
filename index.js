@@ -6,7 +6,7 @@ var FUNC = 'function',
     REJECT = 'reject',
     FULFILL = 'fulfill',
     PENDING = 0,
-    isNode = is(module, OBJECT) && module.exports;
+    isNode = typeof module == OBJECT && module.exports;
 
 function p0() {
 //  this._val = undefined;
@@ -20,16 +20,16 @@ p0.tick = isNode ? process.nextTick : setTimeout;
 p0.prototype = {
 
     _exec: function(cbs) {
-        var val = this._val, act = this._act;
+        var val = this._val, act = this._act, tick = p0.tick;
 
-        p0.tick(function() {
+        tick(function() {
             var inf, pr, cb;
 
             while (inf = cbs.shift()) {
                 pr = inf.pr;
                 cb = inf.cb;
 
-                if (is(cb, FUNC)) {
+                if (typeof cb == FUNC) {
                     try {
                         pr.fulfill(cb(val));
                     } catch(e) {
@@ -66,7 +66,7 @@ p0.prototype = {
                 that.reject(e);
                 return;
             }
-            if (is(then, FUNC)) {
+            if (typeof then == FUNC) {
                 try {
                     then.call(value,
                         function(v) { pending = pending && that.fulfill(v); },
@@ -98,7 +98,5 @@ p0.prototype = {
 };
 
 if (isNode) { module.exports = p0; } else { (root || window).p0 = p0; };
-
-function is(val, type) { return typeof val == type; }
 
 })(this);
