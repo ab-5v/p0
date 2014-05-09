@@ -6,7 +6,7 @@ var FUNC = 'function',
     REJECT = 'reject',
     FULFILL = 'fulfill',
     PENDING = 0,
-    isNode = typeof module == OBJECT && module.exports;
+    isNode = is(module, OBJECT) && module.exports;
 
 function p0() {
 //  this._val = undefined;
@@ -27,9 +27,9 @@ p0.prototype = {
 
             while (inf = cbs.shift()) {
                 pr = inf.pr;
-                cb = isFunction(inf.cb);
+                cb = inf.cb;
 
-                if (cb) {
+                if (is(cb, FUNC)) {
                     try {
                         pr.fulfill(cb(val));
                     } catch(e) {
@@ -66,7 +66,7 @@ p0.prototype = {
                 that.reject(e);
                 return;
             }
-            if (isFunction(then)) {
+            if (is(then, FUNC)) {
                 try {
                     then.call(value,
                         function(v) { pending = pending && that.fulfill(v); },
@@ -99,6 +99,6 @@ p0.prototype = {
 
 if (isNode) { module.exports = p0; } else { (root || window).p0 = p0; };
 
-function isFunction(val) { return typeof val == FUNC && val; }
+function is(val, type) { return typeof val == type; }
 
 })(this);
