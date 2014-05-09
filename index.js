@@ -97,6 +97,6 @@ p0.prototype = {
 
 };
 
-if (isNode) { module.exports = p0; } else { (root || window).p0 = p0; };
+if (isNode) { module.exports = p0; } else { root.p0 = p0; }
 
 })(this);
