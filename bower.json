@@ -1,0 +1,31 @@
+{
+  "name": "p0",
+  "main": "index.js",
+  "version": "0.1.1",
+  "homepage": "https://github.com/artjock/p0",
+  "authors": [
+    "Artur Burtsev <artjock@gmail.com>"
+  ],
+  "description": "Minimal Promise/A+ implementation.",
+  "moduleType": [
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "defer",
+    "promise",
+    "deferred",
+    "promise",
+    "promise/A+",
+    "A+",
+    "aplus"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
