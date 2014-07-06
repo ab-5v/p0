@@ -22,7 +22,7 @@ p0.prototype = {
     _exec: function(cbs) {
         var val = this._val, act = this._act, tick = p0.tick;
 
-        tick(function() {
+        tick.call(null, function() {
             var inf, pr, cb;
 
             while (inf = cbs.shift()) {
