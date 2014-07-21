@@ -15,14 +15,14 @@ function p0() {
     this._ebs = [];
 }
 
-p0.tick = isNode ? process.nextTick : setTimeout;
+p0.tick = function(cb) { isNode ? process.nextTick(cb) : setTimeout(cb, 0); };
 
 p0.prototype = {
 
     _exec: function(cbs) {
-        var val = this._val, act = this._act, tick = p0.tick;
+        var val = this._val, act = this._act;
 
-        tick.call(null, function() {
+        p0.tick(function() {
             var inf, pr, cb;
 
             while (inf = cbs.shift()) {
