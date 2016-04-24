@@ -1,5 +1,5 @@
 <a href="http://promises-aplus.github.com/promises-spec"><img src="http://promises-aplus.github.com/promises-spec/assets/logo-small.png" align="right" alt="Promises/A+ logo"/></a>
-p0 [![build status](https://secure.travis-ci.org/artjock/pzero.png)](http://travis-ci.org/artjock/p0)
+p0 [![build status](https://travis-ci.org/artjock/p0.svg)](http://travis-ci.org/artjock/p0)
 ==
 
 Minimal and fast Promise/A+ 1.1 implementation. It's all you need to pass the [tests](https://github.com/promises-aplus/promises-tests) and build your own [extended API](https://github.com/artjock/pzero).
